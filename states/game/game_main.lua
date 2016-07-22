@@ -2,6 +2,23 @@ local Main = Game:addState('Main')
 
 local GRAV_CONST = 0.00000000006674
 
+local function getForce(x, y, mass, gravity_wells)
+  local fx, fy = 0, 0
+
+  local x1, y1 = x, y
+  for _,gravity_well in ipairs(gravity_wells) do
+    local x2, y2 = gravity_well:getPosition()
+    local dx, dy = x1 - x2, y1 - y2
+    local dist2 = dx * dx + dy * dy
+    local force = GRAV_CONST * (mass * gravity_well:getMass() / dist2)
+
+    local phi = math.atan2(y2 - y1, x2 - x1)
+    fx, fy = fx + force * math.cos(phi), fy + force * math.sin(phi)
+  end
+
+  return fx, fy
+end
+
 function Main:enteredState()
   local Camera = require("lib/camera")
   self.camera = Camera:new()
@@ -20,11 +37,13 @@ function Main:enteredState()
   triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
   triangle_fixture = p.newFixture(triangle_body, triangle_shape, 1)
 
-  fx, fy = 50 * 50, -200 * 50
-  triangle_body:applyForce(fx, fy)
+  triangle_body:applyLinearImpulse(0, -200)
 
   gravity_wells = {}
   table.insert(gravity_wells, GravityWell:new(0, 0, 10 ^ 16))
+  table.insert(gravity_wells, GravityWell:new(-400, 0, 10 ^ 16))
+  table.insert(gravity_wells, GravityWell:new(-400, -400, 10 ^ 16))
+  table.insert(gravity_wells, GravityWell:new(0, -400, 10 ^ 16))
 
   g.setFont(self.preloaded_fonts["04b03_16"])
   self.camera:scale(2, 2)
@@ -34,32 +53,9 @@ end
 function Main:update(dt)
   world:update(dt)
 
-  fx, fy = 0, 0
-
-  local bodies = world:getBodyList()
-  for _,bodyA in ipairs(bodies) do
-    for _,bodyB in ipairs(bodies) do
-      if bodyA ~= bodyB then
-        local x1, y1 = bodyA:getPosition()
-        local x2, y2 = bodyB:getPosition()
-        local dx, dy = x1 - x2, y1 - y2
-        local dist2 = dx * dx + dy * dy
-        local force = GRAV_CONST * (bodyA:getMass() * bodyB:getMass() / dist2)
-
-        local bodyADirection = math.atan2(y2 - y1, x2 - x1)
-        bodyA:applyForce(force * math.cos(bodyADirection), force * math.sin(bodyADirection))
-
-        local bodyBDirection = math.atan2(y1 - y2, x1 - x2)
-        bodyB:applyForce(force * math.cos(bodyBDirection), force * math.sin(bodyBDirection))
-
-        if bodyA == triangle_body then
-          fx, fy = fx + force * math.cos(bodyADirection), fy + force * math.sin(bodyADirection)
-        elseif bodyB == triangle_body then
-          fx, fy = fx + force * math.cos(bodyBDirection), fy + force * math.sin(bodyBDirection)
-        end
-      end
-    end
-  end
+  local tx, ty = triangle_body:getPosition()
+  local fx, fy = getForce(tx, ty, triangle_body:getMass(), gravity_wells)
+  triangle_body:applyForce(fx, fy)
 
   local thrust = 50
   if love.keyboard.isDown('w') then
@@ -82,25 +78,36 @@ function Main:draw()
 
   do
     local x, y = triangle_body:getPosition()
+    local mass = triangle_body:getMass()
+    local vx, vy = triangle_body:getLinearVelocity()
     local phi = triangle_body:getAngle()
+
     g.draw(triangle_mesh, x, y, phi)
 
-    local vx, vy = triangle_body:getLinearVelocity()
-    local w = triangle_body:getAngularVelocity()
+    local dt = love.timer.getAverageDelta() * 2
 
     g.setColor(255, 0, 0)
-    local mass = triangle_body:getMass()
-    local acc_x, acc_y = fx / mass, fy / mass
-    do
-      local dt = 1/60*2
+
+    for i=1,60 do
+      local fx, fy = getForce(x, y, mass, gravity_wells)
+      local acc_x, acc_y = fx / mass, fy / mass
       local tx, ty = acc_x * dt, acc_x * dt
-      local px, py = x, y
-      for i=1,100 do
-        local dx, dy = dt * (vx + tx / 2), dt * (vy + ty / 2)
-        g.line(px, py, px + dx, py + dy)
-        px, py = px + dx, py + dy
-        vx, vy = vx + tx, vy + ty
+
+      local dx, dy = dt * (vx + tx / 2), dt * (vy + ty / 2)
+      g.line(x, y, x + dx, y + dy)
+      x, y = x + dx, y + dy
+      vx, vy = vx + tx, vy + ty
+
+      local do_break = false
+      for _,gw in ipairs(gravity_wells) do
+        if gw:testPoint(x, y) then
+          g.print('bang', x, y)
+          do_break = true
+          break
+        end
       end
+
+      if do_break then break end
     end
   end
 
