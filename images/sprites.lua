@@ -1,7 +1,7 @@
 -- Generated with TexturePacker (http://www.codeandweb.com/texturepacker)
 -- with a custom export by Stewart Bracken (http://stewart.bracken.bz)
 --
--- $TexturePacker:SmartUpdate:e1d1cf4764202a5cfe08ec2cae7065c9:35cc6571da91846bbd0323d04b8a5c5a:ce59e0ef6b4af9fefc088af809f682f1$
+-- $TexturePacker:SmartUpdate:0ae59dcfccbab946ce9ff647db6870da:6b5c24c9c617507f71978c1a83eaebe4:ce59e0ef6b4af9fefc088af809f682f1$
 --
 --[[------------------------------------------------------------------------
 -- Example Usage --
@@ -24,12 +24,9 @@ local TextureAtlas = {}
 local Quads = {}
 local Texture = game.preloaded_images["sprites.png"]
 
-Quads["asteroid_1"] = love.graphics.newQuad(12, 1, 24, 19, 413, 449 )
-Quads["asteroid_2"] = love.graphics.newQuad(38, 1, 28, 21, 413, 449 )
-Quads["asteroid_3"] = love.graphics.newQuad(68, 1, 32, 30, 413, 449 )
-Quads["flare-2"] = love.graphics.newQuad(1, 35, 411, 413, 413, 449 )
-Quads["juno_face"] = love.graphics.newQuad(1, 1, 9, 9, 413, 449 )
-Quads["juno_panels"] = love.graphics.newQuad(102, 1, 31, 32, 413, 449 )
+Quads["asteroid_1"] = love.graphics.newQuad(35, 24, 24, 19, 64, 44 )
+Quads["asteroid_2"] = love.graphics.newQuad(35, 1, 28, 21, 64, 44 )
+Quads["asteroid_3"] = love.graphics.newQuad(1, 1, 32, 30, 64, 44 )
 
 function TextureAtlas:getDimensions(quadName)
 	local quad = self.quads[quadName]
