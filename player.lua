@@ -1,4 +1,5 @@
 local getForce = require('shared.get_force')
+local getNearestGravityWellToPoint = require('shared.get_nearest_gravity_well_to_point')
 local Player = class('Player', Base)
 
 function Player:initialize(x, y, radius, fuel)
@@ -12,6 +13,7 @@ function Player:initialize(x, y, radius, fuel)
   self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 3)
   self.fixture:setUserData(self)
   self.maxVelocity = 200
+  self.body:setAngularDamping(2)
 
   -- Do particle shit
   self.enginepsystem = love.graphics.newParticleSystem(game.preloaded_images['flare-2.png'], 320)
@@ -44,9 +46,23 @@ function Player:update(dt)
 
   self.fuel = math.min(self.max_fuel, self.fuel + dt)
 
+  -- clamp linear velocity
   vx, vy = self.body:getLinearVelocity()
   self.body:setLinearVelocity(math.clamp(-self.maxVelocity, vx, self.maxVelocity), math.clamp(-self.maxVelocity, vy, self.maxVelocity))
 
+  -- get closest gravity_well
+  local nearestWell, dx, dy, dist = getNearestGravityWellToPoint(tx, ty, GravityWell.instances)
+  dist = dist - (nearestWell:getRadius() ^ 2)
+
+  -- If we're within an arbitrary dist^2, try and rotate to land using magic numbers
+  if (dist < 25000) then
+    local phi = math.atan2(dy, dx)
+    local angle = (phi + math.pi / 2) - player.body:getAngle()
+    angle = (angle + math.pi) % (math.pi * 2) - math.pi
+    player.body:applyTorque(angle * (0.022 * (26000 - dist)) )
+  end
+
+  -- set engine particle system rotation
   self.enginepsystem:setDirection(self.body:getAngle())
   self.enginepsystem:update(dt)
 end
