@@ -16,8 +16,11 @@ function Asteroid:initialize(x, y, radius, evaluator)
 end
 
 function Asteroid:update(dt)
-  local dx, dy = self.evaluator(love.timer.getTime())
-  self.body:setPosition(self.origin_x + dx, self.origin_y + dy)
+  if self.evaluator then
+    local dx, dy = self.evaluator(love.timer.getTime())
+    self.body:setPosition(self.origin_x + dx, self.origin_y + dy)
+  end
+  self.body:applyForce(200 * dt, love.math.random() - 0.5 * 50 * dt)
 end
 
 function Asteroid:getPosition()

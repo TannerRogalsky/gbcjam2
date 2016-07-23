@@ -27,5 +27,10 @@ local function drawGame(game)
     g.setColor(255, 255, 255)
     g.print('ENERGY', 5, 5 + h + 5)
   end
+
+  do
+    g.setColor(255, 255, 255)
+    g.print('NEXT TARGET: ' .. level.targets[target_index].name, 5, g.getHeight() - 16)
+  end
 end
 return drawGame

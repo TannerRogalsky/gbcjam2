@@ -3,14 +3,25 @@ local getForce = require('shared.get_force')
 local drawGame = require('shared.draw_game')
 
 function Main:enteredState()
+  local function spawnAsteroid()
+    local ax, ay = self.camera:mousePosition(-50, love.math.random(g.getHeight()))
+    local asteroid = Asteroid:new(ax, ay, love.math.random(10, 30))
+    asteroid.body:applyLinearImpulse(200, 0)
+    table.insert(level.asteroids, asteroid)
+  end
+  asteroid_spawn = cron.every(0.5, spawnAsteroid)
+  -- for i=1,10 do
+  --   spawnAsteroid()
+  -- end
 end
 
 function Main:update(dt)
   player:update(dt)
+  asteroid_spawn:update(dt)
 
   local vx, vy = player:getLinearVelocity()
   local s = (math.abs(vx) + math.abs(vy)) / 2 / player.maxVelocity
-  self.camera:setScale(0.5 + s * 2, 0.5 + s * 2)
+  self.camera:setScale(0.5 + s * 6, 0.5 + s * 6)
 
   for i,asteroid in ipairs(level.asteroids) do
     asteroid:update(dt)
@@ -38,7 +49,7 @@ function Main:mousereleased(x, y, button, isTouch)
     local px, py = player:getPosition()
     local dx, dy = px - mx, py - my
     local phi = math.atan2(dy, dx)
-    local thrust = 10
+    local thrust = 30
 
     -- rotate player toward direction of travel based on mouse impulses
     local angle = (phi + math.pi / 2) - player.body:getAngle()

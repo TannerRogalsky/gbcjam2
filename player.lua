@@ -26,7 +26,7 @@ function Player:initialize(x, y, radius, fuel)
 end
 
 function Player:begin_contact(other, contact, nx, ny)
-  if other == level.target then
+  if other == level.targets[target_index] then
     game:gotoState("Over")
   end
 end
@@ -91,7 +91,7 @@ function Player:draw()
   g.draw(fg, x, y, phi, scale, scale, fgw / 2, fgh / 2)
 
   g.setColor(0, 255, 0)
-  local tx, ty = level.target:getPosition()
+  local tx, ty = level.targets[target_index]:getPosition()
   local phi = math.atan2(ty - y, tx - x)
   g.line(x, y, x + 100 * math.cos(phi), y + 100 * math.sin(phi))
 

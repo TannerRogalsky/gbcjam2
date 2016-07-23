@@ -1,8 +1,9 @@
 local Planet = class('Planet', GravityWell)
 
-function Planet:initialize(x, y, size, mass, color)
+function Planet:initialize(x, y, size, mass, color, name)
   GravityWell.initialize(self, x, y, size, mass)
 
+  self.name = name
   self.color = color
 end
 

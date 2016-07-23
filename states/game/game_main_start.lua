@@ -24,7 +24,9 @@ function MainStart:enteredState()
   world = p.newWorld(0, 0, true)
   world:setCallbacks(unpack(require('physics_callbacks')))
 
-  level = require('levels.' .. self.sorted_names[self.level_index])()
+  -- level = require('levels.' .. self.sorted_names[self.level_index])()
+  level = require('levels.test')()
+  target_index = 1
 
   self.asteroids = level.asteroids
 

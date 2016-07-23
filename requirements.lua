@@ -36,6 +36,7 @@ GravityWell = require('gravity_well')
 Planet = require('planet')
 Player = require('player')
 Asteroid = require('asteroid')
+MovityWell = require('movity_well')
 
 Direction = require("direction")
 
