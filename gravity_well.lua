@@ -1,12 +1,13 @@
 local GravityWell = class('GravityWell', Base)
 GravityWell.static.instances = {}
 
-function GravityWell:initialize(x, y, density)
+function GravityWell:initialize(x, y, radius, mass)
   Base.initialize(self)
 
   local p = love.physics
   self.body = p.newBody(world, x, y, 'dynamic')
-  self.fixture = p.newFixture(self.body, p.newCircleShape(40), density)
+  self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 1)
+  self.body:setMass(mass)
 
   GravityWell.instances[self.id] = self
 end
