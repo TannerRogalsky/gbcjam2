@@ -33,6 +33,7 @@ Boid = require("lib.boid")
 Base = require("base")
 Game = require("game")
 GravityWell = require('gravity_well')
+Planet = require('planet')
 
 Direction = require("direction")
 
