@@ -10,6 +10,9 @@ return function()
     start = {
       direction = -math.pi / 2,
       planet = Planet:new(400, 300, 40, 10 ^ 14, {100, 100, 255})
+    },
+    asteroids = {
+      Asteroid:new(-200, 0, 10, -25, -30)
     }
   }
 end

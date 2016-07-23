@@ -1,8 +1,11 @@
 local getForce = require('shared.get_force')
 local Player = class('Player', Base)
 
-function Player:initialize(x, y, radius)
+function Player:initialize(x, y, radius, fuel)
   Base.initialize(self)
+
+  self.fuel = fuel or 30
+  self.max_fuel = self.fuel
 
   local p = love.physics
 
@@ -36,6 +39,8 @@ function Player:update(dt)
   local tx, ty = self.body:getPosition()
   local fx, fy = getForce(tx, ty, self.body:getMass(), GravityWell.instances)
   self.body:applyForce(fx, fy)
+
+  self.fuel = math.min(self.max_fuel, self.fuel + dt)
 end
 
 function Player:draw()
@@ -46,6 +51,11 @@ function Player:draw()
 
   g.setColor(255, 255, 255)
   g.draw(triangle_mesh, x, y, phi)
+
+  g.setColor(0, 255, 0)
+  local tx, ty = level.target:getPosition()
+  local phi = math.atan2(ty - y, tx - x)
+  g.line(x, y, x + 100 * math.cos(phi), y + 100 * math.sin(phi))
 
   local dt = 1/10
 

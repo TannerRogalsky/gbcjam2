@@ -35,6 +35,7 @@ Game = require("game")
 GravityWell = require('gravity_well')
 Planet = require('planet')
 Player = require('player')
+Asteroid = require('asteroid')
 
 Direction = require("direction")
 

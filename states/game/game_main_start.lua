@@ -1,4 +1,5 @@
 local MainStart = Game:addState('MainStart')
+local drawGame = require('shared.draw_game')
 
 local function getLevelBounds(world)
   local x1, y1, x2, y2 = math.huge, math.huge, -math.huge, -math.huge
@@ -25,6 +26,8 @@ function MainStart:enteredState()
 
   level = require('levels.' .. self.sorted_names[self.level_index])()
 
+  self.asteroids = level.asteroids
+
   local radius = 10
   local start_thrust = 50
   local start = level.start
@@ -43,15 +46,7 @@ function MainStart:enteredState()
 end
 
 function MainStart:draw()
-  self.camera:set()
-
-  for i,gravity_well in pairs(GravityWell.instances) do
-    gravity_well:draw()
-  end
-
-  player:draw()
-
-  self.camera:unset()
+  drawGame(self)
 end
 
 function MainStart:mousepressed(x, y, button, isTouch)
