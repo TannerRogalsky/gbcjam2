@@ -1,5 +1,20 @@
 local MainStart = Game:addState('MainStart')
 
+local function getLevelBounds(world)
+  local x1, y1, x2, y2 = math.huge, math.huge, -math.huge, -math.huge
+  local bodies = world:getBodyList()
+  for _,body in ipairs(bodies) do
+    for _,fixture in ipairs(body:getFixtureList()) do
+      local fx1, fy1, fx2, fy2 = fixture:getBoundingBox()
+      if x1 > fx1 then x1 = fx1 end
+      if y1 > fy1 then y1 = fy1 end
+      if x2 < fx2 then x2 = fx2 end
+      if y2 < fy2 then y2 = fy2 end
+    end
+  end
+  return x1, y1, x2, y2
+end
+
 function MainStart:enteredState()
   local Camera = require("lib/camera")
   self.camera = Camera:new()
