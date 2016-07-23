@@ -1,5 +1,4 @@
 local MainStart = Game:addState('MainStart')
-local drawShip = require('shared.draw_ship')
 
 function MainStart:enteredState()
   local Camera = require("lib/camera")
@@ -9,25 +8,17 @@ function MainStart:enteredState()
   world = p.newWorld(0, 0, true)
   world:setCallbacks(unpack(require('physics_callbacks')))
 
-  local radius = 10
-  triangle_mesh = g.newMesh({
-    {0, -radius},
-    {radius, radius},
-    {-radius, radius},
-  })
-
-  triangle_body = p.newBody(world, g.getWidth() / 2, g.getHeight() / 2, 'dynamic')
-  triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
-  triangle_fixture = p.newFixture(triangle_body, triangle_shape, 3)
-
   level = require('levels.' .. self.sorted_names[self.level_index])()
+
+  local radius = 10
   local start_thrust = 50
   local start = level.start
   local tx, ty = start.planet:getPosition()
   tx = tx + (start.planet:getRadius() + radius) * math.cos(start.direction)
   ty = ty + (start.planet:getRadius() + radius) * math.sin(start.direction)
-  triangle_body:setPosition(tx, ty)
-  triangle_body:applyLinearImpulse(math.cos(start.direction) * start_thrust, math.sin(start.direction) * start_thrust)
+
+  player = Player:new(tx, ty, radius)
+  player.body:applyLinearImpulse(math.cos(start.direction) * start_thrust, math.sin(start.direction) * start_thrust)
 
   g.setFont(self.preloaded_fonts["04b03_16"])
   self.camera:scale(2, 2)
@@ -43,7 +34,7 @@ function MainStart:draw()
     gravity_well:draw()
   end
 
-  drawShip(triangle_body)
+  player:draw()
 
   self.camera:unset()
 end

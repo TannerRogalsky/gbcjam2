@@ -1,5 +1,4 @@
 local Main = Game:addState('Main')
-local drawShip = require('shared.draw_ship')
 local getForce = require('shared.get_force')
 
 function Main:enteredState()
@@ -8,9 +7,9 @@ end
 function Main:update(dt)
   world:update(dt)
 
-  local tx, ty = triangle_body:getPosition()
-  local fx, fy = getForce(tx, ty, triangle_body:getMass(), GravityWell.instances)
-  triangle_body:applyForce(fx, fy)
+  player:update(dt)
+
+  local tx, ty = player:getPosition()
 
   local cx = tx - g.getWidth() / (2 / self.camera.scaleX)
   local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
@@ -33,7 +32,7 @@ function Main:draw()
     gravity_well:draw()
   end
 
-  drawShip(triangle_body)
+  player:draw()
 
   self.camera:unset()
 end
@@ -43,12 +42,12 @@ end
 
 function Main:mousereleased(x, y, button, isTouch)
   local mx, my = self.camera:mousePosition(x, y)
-  local px, py = triangle_body:getPosition()
+  local px, py = player:getPosition()
   local dx, dy = px - mx, py - my
   local phi = math.atan2(dy, dx)
   local thrust = 100
-  triangle_body:setAngle(phi + math.pi / 2)
-  triangle_body:applyLinearImpulse(thrust * math.cos(phi), thrust * math.sin(phi))
+  player.body:setAngle(phi + math.pi / 2)
+  player.body:applyLinearImpulse(thrust * math.cos(phi), thrust * math.sin(phi))
 end
 
 function Main:keypressed(key, scancode, isrepeat)
