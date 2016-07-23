@@ -60,6 +60,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
+  g.setColor(255, 100, 100)
   g.draw(self.enginepsystem, 0, 0)
 
   local x, y = self.body:getPosition()
