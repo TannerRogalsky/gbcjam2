@@ -5,8 +5,6 @@ function Main:enteredState()
 end
 
 function Main:update(dt)
-  world:update(dt)
-
   player:update(dt)
 
   local tx, ty = player:getPosition()
@@ -15,14 +13,7 @@ function Main:update(dt)
   local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
   self.camera:setPosition(cx, cy)
 
-  -- local thrust = 50
-  -- if love.keyboard.isDown('w') then
-  --   local phi = triangle_body:getAngle() - math.pi / 2
-  --   triangle_body:applyForce(thrust * math.cos(phi), thrust * math.sin(phi))
-  -- end
-
-  -- if love.keyboard.isDown('a') then triangle_body:applyTorque(-thrust) end
-  -- if love.keyboard.isDown('d') then triangle_body:applyTorque(thrust) end
+  world:update(dt)
 end
 
 function Main:draw()

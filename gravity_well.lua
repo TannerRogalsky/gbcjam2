@@ -8,6 +8,7 @@ function GravityWell:initialize(x, y, radius, mass)
   self.body = p.newBody(world, x, y, 'dynamic')
   self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 1)
   self.body:setMass(mass)
+  self.fixture:setUserData(self)
 
   GravityWell.instances[self.id] = self
 end

@@ -15,6 +15,13 @@ function Player:initialize(x, y, radius)
   self.body = p.newBody(world, x, y, 'dynamic')
   local triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
   self.fixture = p.newFixture(self.body, triangle_shape, 3)
+  self.fixture:setUserData(self)
+end
+
+function Player:begin_contact(other, contact, nx, ny)
+  if other == level.target then
+    game:gotoState("Over")
+  end
 end
 
 function Player:getPosition()
