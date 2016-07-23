@@ -7,6 +7,7 @@ function MainStart:enteredState()
 
   local p = love.physics
   world = p.newWorld(0, 0, true)
+  world:setCallbacks(unpack(require('physics_callbacks')))
 
   local radius = 10
   triangle_mesh = g.newMesh({
