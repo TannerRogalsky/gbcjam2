@@ -35,7 +35,12 @@ function Main:mousereleased(x, y, button, isTouch)
     local dx, dy = px - mx, py - my
     local phi = math.atan2(dy, dx)
     local thrust = 10
-    player.body:setAngle(phi + math.pi / 2)
+
+    -- rotate player toward direction of travel based on mouse impulses
+    local angle = (phi + math.pi / 2) - player.body:getAngle()
+    angle = (angle + math.pi) % (math.pi * 2) - math.pi
+    player.body:applyTorque(angle * 3500)
+
     player.body:applyLinearImpulse(thrust * math.cos(phi), thrust * math.sin(phi))
     player.fuel = player.fuel - cost
   end
