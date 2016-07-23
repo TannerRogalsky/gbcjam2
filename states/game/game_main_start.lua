@@ -28,7 +28,7 @@ function MainStart:enteredState()
 
   self.asteroids = level.asteroids
 
-  local radius = 10
+  local radius = 20
   local start_thrust = 50
   local start = level.start
   local tx, ty = start.planet:getPosition()
@@ -37,12 +37,19 @@ function MainStart:enteredState()
 
   player = Player:new(tx, ty, radius)
   player.body:applyLinearImpulse(math.cos(start.direction) * start_thrust, math.sin(start.direction) * start_thrust)
+  player.body:setAngle(start.direction + math.pi / 2)
 
   g.setFont(self.preloaded_fonts["04b03_16"])
-  self.camera:scale(2, 2)
+  self.camera:scale(0.5, 0.5)
   local cx = tx - g.getWidth() / (2 / self.camera.scaleX)
   local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
   self.camera:setPosition(cx, cy)
+end
+
+function MainStart:update(dt)
+  for i,asteroid in ipairs(level.asteroids) do
+    asteroid:update(dt)
+  end
 end
 
 function MainStart:draw()

@@ -8,6 +8,10 @@ end
 function Main:update(dt)
   player:update(dt)
 
+  local vx, vy = player:getLinearVelocity()
+  local s = (math.abs(vx) + math.abs(vy)) / 2 / player.maxVelocity
+  self.camera:setScale(0.5 + s * 2, 0.5 + s * 2)
+
   for i,asteroid in ipairs(level.asteroids) do
     asteroid:update(dt)
   end

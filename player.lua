@@ -4,20 +4,12 @@ local Player = class('Player', Base)
 function Player:initialize(x, y, radius, fuel)
   Base.initialize(self)
 
-  self.fuel = fuel or 30
+  self.fuel = fuel or 10
   self.max_fuel = self.fuel
 
   local p = love.physics
-
-  triangle_mesh = g.newMesh({
-    {0, -radius},
-    {radius, radius},
-    {-radius, radius},
-  })
-
   self.body = p.newBody(world, x, y, 'dynamic')
-  local triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
-  self.fixture = p.newFixture(self.body, triangle_shape, 3)
+  self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 3)
   self.fixture:setUserData(self)
   self.maxVelocity = 200
 
@@ -70,8 +62,17 @@ function Player:draw()
 
   self.enginepsystem:setPosition(x, y)
 
+  local radius = self.fixture:getShape():getRadius()
+
   g.setColor(255, 255, 255)
-  g.draw(triangle_mesh, x, y, phi)
+  -- g.circle('fill', x, y, radius)
+  local bg = game.preloaded_images['juno_panels.png']
+  local bgw, bgh = bg:getWidth(), bg:getHeight()
+  local fg = game.preloaded_images['juno_face.png']
+  local fgw, fgh = fg:getWidth(), fg:getHeight()
+  local scale = bgw / 2 / radius
+  g.draw(bg, x, y, love.timer.getTime(), scale, scale, bgw / 2, bgh / 2)
+  g.draw(fg, x, y, phi, scale, scale, fgw / 2, fgh / 2)
 
   g.setColor(0, 255, 0)
   local tx, ty = level.target:getPosition()

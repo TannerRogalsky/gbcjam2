@@ -1,21 +1,23 @@
 local Asteroid = class('Asteroid', Base)
 local getForce = require('shared.get_force')
 
-function Asteroid:initialize(x, y, radius, dx, dy)
+function Asteroid:initialize(x, y, radius, evaluator)
   Base.initialize(self)
+
+  self.origin_x = x
+  self.origin_y = y
 
   local p = love.physics
   self.body = p.newBody(world, x, y, 'dynamic')
   self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 1)
   self.fixture:setUserData(self)
 
-  self.body:applyLinearImpulse(dx, dy)
+  self.evaluator = evaluator
 end
 
 function Asteroid:update(dt)
-  local tx, ty = self.body:getPosition()
-  local fx, fy = getForce(tx, ty, self.body:getMass(), GravityWell.instances)
-  self.body:applyForce(fx, fy)
+  local dx, dy = self.evaluator(love.timer.getTime())
+  self.body:setPosition(self.origin_x + dx, self.origin_y + dy)
 end
 
 function Asteroid:getPosition()
