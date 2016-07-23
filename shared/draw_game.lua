@@ -3,6 +3,8 @@ local hsl2rgb = require('lib.hsl')
 local function drawGame(game)
   game.camera:set()
 
+  g.draw(game.preloaded_images['background_space.png'], bg_quad, -10000, -10000)
+
   for i,gravity_well in pairs(GravityWell.instances) do
     gravity_well:draw()
   end

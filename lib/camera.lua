@@ -19,9 +19,9 @@ end
 
 function Camera:set()
   g.push()
-  g.rotate(-self.rotation)
   g.scale(1 / self.scaleX, 1 / self.scaleY)
   g.translate(-self.x, -self.y)
+  g.rotate(-self.rotation)
 end
 
 function Camera:unset()
@@ -45,6 +45,10 @@ end
 
 function Camera:rotate(dr)
   self.rotation = self.rotation + dr
+end
+
+function Camera:setRotation(r)
+  self.rotation = r
 end
 
 function Camera:scale(sx, sy)

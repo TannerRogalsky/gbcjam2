@@ -20,6 +20,10 @@ function MainStart:enteredState()
   local Camera = require("lib/camera")
   self.camera = Camera:new()
 
+  local bg = game.preloaded_images['background_space.png']
+  bg:setWrap('mirroredrepeat', 'mirroredrepeat')
+  bg_quad = g.newQuad(0, 0, 100000, 100000, bg:getWidth(), bg:getHeight())
+
   local p = love.physics
   world = p.newWorld(0, 0, true)
   world:setCallbacks(unpack(require('physics_callbacks')))

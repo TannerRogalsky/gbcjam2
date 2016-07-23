@@ -2,6 +2,15 @@ local Main = Game:addState('Main')
 local getForce = require('shared.get_force')
 local drawGame = require('shared.draw_game')
 
+local pow = math.pow
+local function inOutExpo(t, b, c, d)
+  if t == 0 then return b end
+  if t == d then return b + c end
+  t = t / d * 2
+  if t < 1 then return c / 2 * pow(2, 10 * (t - 1)) + b - c * 0.0005 end
+  return c / 2 * 1.0005 * (-pow(2, -10 * (t - 1)) + 2) + b
+end
+
 function Main:enteredState()
   local function spawnAsteroid()
     local ax, ay = self.camera:mousePosition(-50, love.math.random(g.getHeight()))
@@ -31,6 +40,7 @@ function Main:update(dt)
   local cx = tx - g.getWidth() / (2 / self.camera.scaleX)
   local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
   self.camera:setPosition(cx, cy)
+  -- self.camera:setRotation(inOutExpo(tx, 0, math.pi / 2, 9000))
 
   world:update(dt)
 end
