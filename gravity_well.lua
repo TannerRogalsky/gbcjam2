@@ -27,6 +27,10 @@ function GravityWell:getRadius()
   return self.fixture:getShape():getRadius()
 end
 
+function GravityWell:destroy()
+  GravityWell.instances[self.id] = nil
+end
+
 function GravityWell:draw()
   local x, y = self.body:getPosition()
   g.setColor(255, 255, 255)

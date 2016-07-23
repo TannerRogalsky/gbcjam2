@@ -20,7 +20,7 @@ function MainStart:enteredState()
   triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
   triangle_fixture = p.newFixture(triangle_body, triangle_shape, 3)
 
-  level = require('levels/test')()
+  level = require('levels.' .. self.sorted_names[self.level_index])()
   local start_thrust = 50
   local start = level.start
   local tx, ty = start.planet:getPosition()
@@ -59,6 +59,9 @@ function MainStart:keypressed(key, scancode, isrepeat)
 end
 
 function MainStart:keyreleased(key, scancode)
+  if key == 'escape' then
+    self:gotoState('Menu')
+  end
 end
 
 function MainStart:gamepadpressed(joystick, button)

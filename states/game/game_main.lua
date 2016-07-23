@@ -55,6 +55,11 @@ function Main:keypressed(key, scancode, isrepeat)
 end
 
 function Main:keyreleased(key, scancode)
+  if key == 'r' then
+    self:gotoState('MainStart')
+  elseif key == 'escape' then
+    self:gotoState('Menu')
+  end
 end
 
 function Main:gamepadpressed(joystick, button)
@@ -68,6 +73,10 @@ end
 
 function Main:exitedState()
   self.camera = nil
+  world:destroy()
+  for id,gw in pairs(GravityWell.instances) do
+    gw:destroy()
+  end
 end
 
 return Main
