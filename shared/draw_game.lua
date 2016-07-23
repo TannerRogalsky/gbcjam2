@@ -7,9 +7,8 @@ local function drawGame(game)
     gravity_well:draw()
   end
 
-  for i,asteroid in ipairs(game.asteroids) do
-    asteroid:draw()
-  end
+  g.setColor(255, 255, 255)
+  g.draw(asteroids_batch)
 
   player:draw()
 

@@ -6,7 +6,7 @@ function Main:enteredState()
   local function spawnAsteroid()
     local ax, ay = self.camera:mousePosition(-50, love.math.random(g.getHeight()))
     local asteroid = Asteroid:new(ax, ay, love.math.random(10, 30))
-    asteroid.body:applyLinearImpulse(200, 0)
+    asteroid.body:applyLinearImpulse(50, 0)
     table.insert(level.asteroids, asteroid)
   end
   asteroid_spawn = cron.every(0.5, spawnAsteroid)

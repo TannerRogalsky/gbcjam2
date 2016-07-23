@@ -30,6 +30,14 @@ function MainStart:enteredState()
 
   self.asteroids = level.asteroids
 
+  sprites = require('images.sprites')
+  asteroids_batch = g.newSpriteBatch(sprites.texture, 100000, 'stream')
+  asteroid_quads = {
+    sprites.quads.asteroid_1,
+    sprites.quads.asteroid_2,
+    sprites.quads.asteroid_3,
+  }
+
   local radius = 20
   local start_thrust = 50
   local start = level.start
