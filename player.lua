@@ -19,6 +19,16 @@ function Player:initialize(x, y, radius, fuel)
   local triangle_shape = p.newPolygonShape(0, -radius, radius, radius, -radius, radius)
   self.fixture = p.newFixture(self.body, triangle_shape, 3)
   self.fixture:setUserData(self)
+  self.maxVelocity = 200
+
+  -- Do particle shit
+  self.enginepsystem = love.graphics.newParticleSystem(game.preloaded_images['flare-2.png'], 320)
+  self.enginepsystem:setParticleLifetime(0.3, 0.8)
+  self.enginepsystem:setSizes(0.2, 0.4)
+  self.enginepsystem:setEmissionRate(50)
+  self.enginepsystem:setSpeed(1.2, 1.4)
+  -- self.enginepsystem:setLinearAcceleration(-20, -20, 20, 20) -- Random movement in all directions.
+  self.enginepsystem:setColors(255, 255, 255, 255, 255, 255, 255, 0) -- Fade to transparency.
 end
 
 function Player:begin_contact(other, contact, nx, ny)
@@ -32,7 +42,7 @@ function Player:getPosition()
 end
 
 function Player:getLinearVelocity()
-  return self.fixture:getLinearVelocity()
+  return self.body:getLinearVelocity()
 end
 
 function Player:update(dt)
@@ -41,13 +51,23 @@ function Player:update(dt)
   self.body:applyForce(fx, fy)
 
   self.fuel = math.min(self.max_fuel, self.fuel + dt)
+
+  vx, vy = self.body:getLinearVelocity()
+  self.body:setLinearVelocity(math.clamp(-self.maxVelocity, vx, self.maxVelocity), math.clamp(-self.maxVelocity, vy, self.maxVelocity))
+
+  self.enginepsystem:setDirection(self.body:getAngle())
+  self.enginepsystem:update(dt)
 end
 
 function Player:draw()
+  g.draw(self.enginepsystem, 0, 0)
+
   local x, y = self.body:getPosition()
   local mass = self.body:getMass()
   local vx, vy = self.body:getLinearVelocity()
   local phi = self.body:getAngle()
+
+  self.enginepsystem:setPosition(x, y)
 
   g.setColor(255, 255, 255)
   g.draw(triangle_mesh, x, y, phi)
