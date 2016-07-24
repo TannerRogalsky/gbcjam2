@@ -90,34 +90,6 @@ function Player:draw()
   local scale = bgw / 2 / radius
   g.draw(bg, x, y, love.timer.getTime(), scale, scale, bgw / 2, bgh / 2)
   g.draw(fg, x, y, phi, scale, scale, fgw / 2, fgh / 2)
-
-  g.setColor(0, 255, 0)
-  local tx, ty = level.targets[target_index]:getPosition()
-  local phi = math.atan2(ty - y, tx - x)
-  g.line(x, y, x + 100 * math.cos(phi), y + 100 * math.sin(phi))
-
-  local dt = 1/10
-
-  g.setColor(255, 0, 0)
-
-  for i=1,60 do
-    local fx, fy = getForce(x, y, mass, GravityWell.instances)
-    local acc_x, acc_y = fx / mass, fy / mass
-    local tx, ty = acc_x * dt, acc_x * dt
-
-    local dx, dy = dt * (vx + tx / 2), dt * (vy + ty / 2)
-    g.line(x, y, x + dx, y + dy)
-    x, y = x + dx, y + dy
-    vx, vy = vx + tx, vy + ty
-
-    local do_break = false
-    for _,gw in pairs(GravityWell.instances) do
-      if gw:testPoint(x, y) then
-        g.print('bang', x, y)
-        return
-      end
-    end
-  end
 end
 
 return Player
