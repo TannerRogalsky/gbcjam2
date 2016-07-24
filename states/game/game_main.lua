@@ -147,7 +147,7 @@ function Main:draw()
 
       if speech_bubble_animation.status == "paused" then
         g.setColor(0, 0, 0)
-        g.printf(current_juno_speech_data.text, g.getWidth() / 2 - 90, g.getHeight() - 100, 450)
+        g.printf(current_juno_speech_data.text, g.getWidth() / 2 - 90, g.getHeight() - 100, 425)
       end
     end
   end
