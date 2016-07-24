@@ -19,9 +19,31 @@ function Main:enteredState()
     table.insert(level.asteroids, asteroid)
   end
   asteroid_spawn = cron.every(0.5, spawnAsteroid)
-  -- for i=1,10 do
-  --   spawnAsteroid()
-  -- end
+
+  juno_speech_data = {
+    {
+      text = "MARS",
+      image = game.preloaded_images['juno_emotion_happy.png']
+    },
+    {
+      text = "JUPITER",
+      image = game.preloaded_images['juno_emotion_normal.png']
+    },
+    {
+      text = "SATURN",
+      image = game.preloaded_images['juno_emotion_anxious.png']
+    },
+    {
+      text = "URANUS",
+      image = game.preloaded_images['juno_emotion_crying.png']
+    },
+    {
+      text = "NEPTUNE",
+      image = game.preloaded_images['juno_emotion_dead.png']
+    }
+  }
+
+  juno_pos = {x = g.getWidth() - 64 * 2, y = g.getHeight()}
 end
 
 function Main:update(dt)
@@ -29,8 +51,10 @@ function Main:update(dt)
   asteroid_spawn:update(dt)
 
   local vx, vy = player:getLinearVelocity()
-  local s = (math.abs(vx) + math.abs(vy)) / 2 / player.maxVelocity
-  self.camera:setScale(0.5 + s * 6, 0.5 + s * 6)
+  local s = 0.5 + (math.abs(vx) + math.abs(vy)) / 2 / player.maxVelocity * 6
+  local current_scale = self.camera.scaleX
+  local delta = math.clamp(-dt / 6, s - current_scale, dt / 6)
+  self.camera:setScale(current_scale + delta, current_scale + delta)
 
   for i,asteroid in ipairs(level.asteroids) do
     asteroid:update(dt)
@@ -59,17 +83,61 @@ function Main:update(dt)
   elseif self.scanState == 1 and tx - px < -tr then
     self.scanState = 2
     self.scanTime = love.timer.getTime()
+    current_juno_speech_data = juno_speech_data[target_index]
+    flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
   elseif self.scanState == 0 and tx - px < tr * 2 then
     self.scanState = 1
     self.scanTime = love.timer.getTime()
   end
 
+  if flavour_tween_in and flavour_tween_in:update(dt) then
+    flavour_tween_in = nil
+    speech_bubble_animation = anim8.newAnimation({
+      sprites.quads.speech_1,
+      sprites.quads.speech_2,
+      sprites.quads.speech_3,
+      sprites.quads.speech_4,
+      sprites.quads.speech_5,
+    }, 0.1, function()
+      speech_bubble_animation:pauseAtEnd()
+      speech_bubble_wait = cron.after(10, function()
+        speech_bubble_animation = nil
+        flavour_tween_out = tween.new(0.5, juno_pos, {y = g.getHeight()}, 'linear')
+      end)
+    end)
+  end
+
+  if speech_bubble_animation then
+    speech_bubble_animation:update(dt)
+  end
+
+  if speech_bubble_wait and speech_bubble_wait:update(dt) then
+    speech_bubble_wait = nil
+  end
+
+  if flavour_tween_out and flavour_tween_out:update(dt) then
+    flavour_tween_out = nil
+  end
 
   world:update(dt)
 end
 
 function Main:draw()
   drawGame(self)
+
+  if current_juno_speech_data then
+    local scale = 2
+    g.draw(current_juno_speech_data.image, juno_pos.x, juno_pos.y, 0, scale, scale)
+
+    if speech_bubble_animation then
+      speech_bubble_animation:draw(sprites.texture, g.getWidth() / 2 - 64 * 1.5, g.getHeight() - 100)
+
+      if speech_bubble_animation.status == "paused" then
+        g.setColor(0, 0, 0)
+        g.printf(current_juno_speech_data.text, g.getWidth() / 2 - 90, g.getHeight() - 100, 450)
+      end
+    end
+  end
 end
 
 function Main:mousepressed(x, y, button, isTouch)

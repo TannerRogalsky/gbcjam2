@@ -4,6 +4,7 @@ local dots = {' [█    ]', ' [██   ]', ' [███  ]', ' [████ ]'
 local function drawGame(game)
   game.camera:set()
 
+  g.setColor(255, 255, 255)
   g.draw(game.preloaded_images['background_space.png'], bg_quad, -10000, -10000)
 
   for i,gravity_well in pairs(GravityWell.instances) do

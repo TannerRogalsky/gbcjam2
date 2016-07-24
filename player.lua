@@ -12,7 +12,7 @@ function Player:initialize(x, y, radius, fuel)
   self.body = p.newBody(world, x, y, 'dynamic')
   self.fixture = p.newFixture(self.body, p.newCircleShape(radius), 3)
   self.fixture:setUserData(self)
-  self.maxVelocity = 200
+  self.maxVelocity = 180
   self.body:setAngularDamping(2)
 
   -- Do particle shit

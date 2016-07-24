@@ -20,8 +20,8 @@ end
 function Camera:set()
   g.push()
   g.scale(1 / self.scaleX, 1 / self.scaleY)
-  g.translate(-self.x, -self.y)
   g.rotate(-self.rotation)
+  g.translate(-self.x, -self.y)
 end
 
 function Camera:unset()

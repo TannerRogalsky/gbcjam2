@@ -1,7 +1,7 @@
 -- Generated with TexturePacker (http://www.codeandweb.com/texturepacker)
 -- with a custom export by Stewart Bracken (http://stewart.bracken.bz)
 --
--- $TexturePacker:SmartUpdate:0ae59dcfccbab946ce9ff647db6870da:6b5c24c9c617507f71978c1a83eaebe4:ce59e0ef6b4af9fefc088af809f682f1$
+-- $TexturePacker:SmartUpdate:0da63b4f100b16742477e3f869bae2bf:eeab3c516f899ffebafdcaccb1686a39:ce59e0ef6b4af9fefc088af809f682f1$
 --
 --[[------------------------------------------------------------------------
 -- Example Usage --
@@ -24,9 +24,14 @@ local TextureAtlas = {}
 local Quads = {}
 local Texture = game.preloaded_images["sprites.png"]
 
-Quads["asteroid_1"] = love.graphics.newQuad(35, 24, 24, 19, 64, 44 )
-Quads["asteroid_2"] = love.graphics.newQuad(35, 1, 28, 21, 64, 44 )
-Quads["asteroid_3"] = love.graphics.newQuad(1, 1, 32, 30, 64, 44 )
+Quads["asteroid_1"] = love.graphics.newQuad(515, 1, 32, 32, 548, 485 )
+Quads["asteroid_2"] = love.graphics.newQuad(515, 35, 32, 32, 548, 485 )
+Quads["asteroid_3"] = love.graphics.newQuad(515, 69, 32, 32, 548, 485 )
+Quads["speech_1"] = love.graphics.newQuad(1, 1, 512, 95, 548, 485 )
+Quads["speech_2"] = love.graphics.newQuad(1, 98, 512, 95, 548, 485 )
+Quads["speech_3"] = love.graphics.newQuad(1, 195, 512, 95, 548, 485 )
+Quads["speech_4"] = love.graphics.newQuad(1, 292, 512, 95, 548, 485 )
+Quads["speech_5"] = love.graphics.newQuad(1, 389, 512, 95, 548, 485 )
 
 function TextureAtlas:getDimensions(quadName)
 	local quad = self.quads[quadName]
