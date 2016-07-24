@@ -27,7 +27,8 @@ end
 
 function Player:begin_contact(other, contact, nx, ny)
   if other == level.targets[target_index] then
-    game:gotoState("Over")
+    local image = g.newImage(g.newScreenshot())
+    game:gotoState("OverTransition", image)
   end
 end
 
