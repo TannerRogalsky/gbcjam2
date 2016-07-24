@@ -57,6 +57,8 @@ function Main:update(dt)
   local current_scale = self.camera.scaleX
   local delta = math.clamp(-dt / 6, s - current_scale, dt / 6)
   self.camera:setScale(current_scale + delta, current_scale + delta)
+  self.camera.scaleX = math.clamp(0.5, self.camera.scaleX, 1.5)
+  self.camera.scaleY = math.clamp(0.5, self.camera.scaleY, 1.5)
 
   for i,asteroid in ipairs(level.asteroids) do
     asteroid:update(dt)
