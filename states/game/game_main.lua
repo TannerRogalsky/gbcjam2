@@ -22,23 +22,23 @@ function Main:enteredState()
 
   juno_speech_data = {
     {
-      text = "MARS",
+      text = "What beautiful red vistas! I hope everyone back on Earth enjoys these images!",
       image = game.preloaded_images['juno_emotion_happy.png']
     },
     {
-      text = "JUPITER",
+      text = "Enormous Jupiter! I hope they aren't having storms like this on Earth!",
       image = game.preloaded_images['juno_emotion_normal.png']
     },
     {
-      text = "SATURN",
+      text = "Rings! I sure do miss Earth, though!",
       image = game.preloaded_images['juno_emotion_anxious.png']
     },
     {
-      text = "URANUS",
+      text = "It's cold out here. I'm so lonely.",
       image = game.preloaded_images['juno_emotion_crying.png']
     },
     {
-      text = "NEPTUNE",
+      text = "...",
       image = game.preloaded_images['juno_emotion_dead.png']
     }
   }
