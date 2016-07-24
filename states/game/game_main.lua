@@ -22,6 +22,10 @@ function Main:enteredState()
 
   juno_speech_data = {
     {
+      text = "... goodbye",
+      image = game.preloaded_images['juno_emotion_dead.png']
+    },
+    {
       text = "What beautiful red vistas! I hope everyone back on Earth enjoys these images!",
       image = game.preloaded_images['juno_emotion_happy.png']
     },
@@ -39,7 +43,7 @@ function Main:enteredState()
     },
     {
       text = "...",
-      image = game.preloaded_images['juno_emotion_dead.png']
+      image = game.preloaded_images['juno_emotion_crying.png']
     }
   }
 
@@ -93,16 +97,33 @@ function Main:update(dt)
     self.scanState = 0
     self.totalDataGathered = self.totalDataGathered + self.planetDataGathered[target_index]
     target_index = target_index + 1
+    self.scanTime = love.timer.getTime()
   elseif self.scanState == 1 and tx - px < -tr then
     self.scanState = 2
     self.planetDataGathered[target_index] = math.min(self.planetDataGathered[target_index], tr * self.dataPerRadius)
     self.scanTime = love.timer.getTime()
     current_juno_speech_data = juno_speech_data[target_index]
     flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
-  elseif self.scanState == 0 and tx - px < tr * 2 then
+  elseif self.scanState == 0 and target_index ~= 1 and tx - px < tr * 2 then
     self.scanState = 1
     self.planetDataGathered[target_index] = 0
     self.scanTime = love.timer.getTime()
+  end
+
+  if target_index == #level.targets then
+    if not game.disableThrust and self.scanTime + 9 < love.timer.getTime() then
+      current_juno_speech_data = {
+        text = "... next target unknown",
+        image = game.preloaded_images['juno_emotion_anxious.png']
+      }
+      flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
+      game.disableThrust = true
+    end
+    if self.scanTime + 24 < love.timer.getTime() then
+      target_index = 1
+      current_juno_speech_data = juno_speech_data[target_index]
+      flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
+    end
   end
 
   if flavour_tween_in and flavour_tween_in:update(dt) then
@@ -163,7 +184,7 @@ end
 
 function Main:mousereleased(x, y, button, isTouch)
   local cost = 2
-  if player.fuel >= cost then
+  if player.fuel >= cost and not game.disableThrust then
     local mx, my = self.camera:mousePosition(x, y)
     local px, py = player:getPosition()
     local dx, dy = px - mx, py - my

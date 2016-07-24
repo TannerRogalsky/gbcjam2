@@ -38,7 +38,7 @@ function MainStart:enteredState()
 
   -- level = require('levels.' .. self.sorted_names[self.level_index])()
   level = require('levels.test')()
-  target_index = 1
+  target_index = 2
 
   self.asteroids = level.asteroids
 
@@ -74,6 +74,7 @@ function MainStart:enteredState()
   self.totalDataGathered = 0
   self.dataPerRadius = 1
   self.dataPerSecondScanning = 23
+  self.disableThrust = false
 
   -- self.vignetteShader = g.newShader('shaders/vignette_shader.glsl')
 end
