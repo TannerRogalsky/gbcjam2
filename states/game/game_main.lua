@@ -123,6 +123,27 @@ function Main:update(dt)
       target_index = 1
       current_juno_speech_data = juno_speech_data[target_index]
       flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
+
+      win_timer = cron.after(8, function()
+
+      end)
+    end
+  end
+
+  local fade_total_time = 5
+  if win_timer then
+    if win_timer:update(dt) then
+      fade_to_black_timer = fade_total_time
+      win_timer = nil
+    end
+  end
+
+  if fade_to_black_timer then
+    fade_to_black_timer = fade_to_black_timer - dt
+    overlay_alpha = ((fade_total_time - fade_to_black_timer) / fade_total_time) * 255
+    if fade_to_black_timer < 0 then
+      self:gotoState('Over')
+      return
     end
   end
 
