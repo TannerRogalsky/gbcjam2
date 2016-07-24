@@ -33,6 +33,12 @@ local function drawGame(game)
 
   do
     g.setColor(255, 255, 255)
+    g.print('DATA SENT', g.getWidth() - 120, 5)
+    g.print(string.format('%.2fGB', game.totalDataGathered), g.getWidth() - 120, 20)
+  end
+
+  do
+    g.setColor(255, 255, 255)
     local dotTime = (love.timer.getTime() - game.scanTime) * 2
     if game.scanState == 0 then
       g.print('NEXT TARGET: ' .. level.targets[target_index].name, 5, g.getHeight() - 16)

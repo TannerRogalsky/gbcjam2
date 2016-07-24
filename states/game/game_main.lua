@@ -87,11 +87,11 @@ function Main:update(dt)
 
   if self.scanState == 2 and love.timer.getTime() - 2.5 > self.scanTime then
     self.scanState = 0
+    self.totalDataGathered = self.totalDataGathered + self.planetDataGathered[target_index]
     target_index = target_index + 1
   elseif self.scanState == 1 and tx - px < -tr then
     self.scanState = 2
     self.planetDataGathered[target_index] = math.min(self.planetDataGathered[target_index], tr * self.dataPerRadius)
-    self.totalDataGathered = self.totalDataGathered + self.planetDataGathered[target_index]
     self.scanTime = love.timer.getTime()
     current_juno_speech_data = juno_speech_data[target_index]
     flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
