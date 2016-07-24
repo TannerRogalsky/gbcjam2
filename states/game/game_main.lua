@@ -44,6 +44,8 @@ function Main:enteredState()
   }
 
   juno_pos = {x = g.getWidth() - 64 * 2, y = g.getHeight()}
+
+  overlay_alpha = 0
 end
 
 function Main:update(dt)
@@ -70,8 +72,8 @@ function Main:update(dt)
   if distToEdge < 0 then
     return self:gotoState("Over")
   elseif distToEdge < 500 then
-    print("You'll die soon " .. distToEdge)
     -- g.setShader(self.vingette_shader)
+    overlay_alpha = (500 - distToEdge) / 500 * 255
   end
 
   local tx, ty = level.targets[target_index]:getPosition()
@@ -100,7 +102,7 @@ function Main:update(dt)
       sprites.quads.speech_5,
     }, 0.1, function()
       speech_bubble_animation:pauseAtEnd()
-      speech_bubble_wait = cron.after(10, function()
+      speech_bubble_wait = cron.after(6, function()
         speech_bubble_animation = nil
         flavour_tween_out = tween.new(0.5, juno_pos, {y = g.getHeight()}, 'linear')
       end)
@@ -138,6 +140,9 @@ function Main:draw()
       end
     end
   end
+
+  g.setColor(255, 255, 255, overlay_alpha)
+  g.draw(overlay)
 end
 
 function Main:mousepressed(x, y, button, isTouch)

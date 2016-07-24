@@ -20,6 +20,12 @@ function MainStart:enteredState()
   local Camera = require("lib/camera")
   self.camera = Camera:new()
 
+  overlay = g.newCanvas()
+  g.setCanvas(overlay)
+  g.setColor(0, 0, 0)
+  g.rectangle('fill', 0, 0, g.getWidth(), g.getHeight())
+  g.setCanvas()
+
   local bg = game.preloaded_images['background_space.png']
   bg:setWrap('mirroredrepeat', 'mirroredrepeat')
   bg_quad = g.newQuad(0, 0, 100000, 100000, bg:getWidth(), bg:getHeight())

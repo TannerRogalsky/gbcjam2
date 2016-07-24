@@ -39,7 +39,7 @@ function Loading:enteredState()
     -- loader finished callback
     -- initialize game stuff here
 
-    self:gotoState("MainStart")
+    self:gotoState("Menu")
   end)
 
   local hexFormatStringPart = '%X '
