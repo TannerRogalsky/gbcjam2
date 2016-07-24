@@ -68,6 +68,8 @@ function MainStart:enteredState()
   self.universeEdge = 1000
   self.scanState = 0
   self.scanTime = 0
+  self.planetDataGathered = {}
+  self.totalDataGathered = 0
   self.dataPerRadius = 1
   self.dataPerSecondScanning = 23
 

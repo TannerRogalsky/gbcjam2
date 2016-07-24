@@ -33,13 +33,19 @@ local function drawGame(game)
 
   do
     g.setColor(255, 255, 255)
+    g.print('DATA SENT', g.getWidth() - 120, 5)
+    g.print(string.format('%.2fGB', game.totalDataGathered), g.getWidth() - 120, 20)
+  end
+
+  do
+    g.setColor(255, 255, 255)
     local dotTime = (love.timer.getTime() - game.scanTime) * 2
     if game.scanState == 0 then
       g.print('NEXT TARGET: ' .. level.targets[target_index].name, 5, g.getHeight() - 16)
     elseif game.scanState == 1 then
       g.print('SCANNING : ' .. level.targets[target_index].name .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
     elseif game.scanState == 2 then
-      g.print('TRANSMITTING ' .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
+      g.print('TRANSMITTING ' .. string.format('%.2f', game.planetDataGathered[target_index]) .. 'GB ' .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
     end
   end
 end
