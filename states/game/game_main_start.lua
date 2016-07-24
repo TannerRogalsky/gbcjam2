@@ -58,6 +58,14 @@ function MainStart:enteredState()
   local cx = tx - g.getWidth() / (2 / self.camera.scaleX)
   local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
   self.camera:setPosition(cx, cy)
+
+  self.universeEdge = 1000
+  self.scanState = 0
+  self.scanTime = 0
+  self.dataPerRadius = 1
+  self.dataPerSecondScanning = 23
+
+  -- self.vignetteShader = g.newShader('shaders/vignette_shader.glsl')
 end
 
 function MainStart:update(dt)

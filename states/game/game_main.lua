@@ -36,11 +36,34 @@ function Main:update(dt)
     asteroid:update(dt)
   end
 
-  local tx, ty = player:getPosition()
-  local cx = tx - g.getWidth() / (2 / self.camera.scaleX)
-  local cy = ty - g.getHeight() / (2 / self.camera.scaleY)
+  local px, py = player:getPosition()
+  local cx = px - g.getWidth() / (2 / self.camera.scaleX)
+  local cy = py - g.getHeight() / (2 / self.camera.scaleY)
   self.camera:setPosition(cx, cy)
   -- self.camera:setRotation(inOutExpo(tx, 0, math.pi / 2, 9000))
+
+  local distToEdge = self.universeEdge - math.abs(py)
+  if distToEdge < 0 then
+    return self:gotoState("Over")
+  elseif distToEdge < 500 then
+    print("You'll die soon " .. distToEdge)
+    -- g.setShader(self.vingette_shader)
+  end
+
+  local tx, ty = level.targets[target_index]:getPosition()
+  local tr = level.targets[target_index]:getRadius()
+
+  if self.scanState == 2 and love.timer.getTime() - 2.5 > self.scanTime then
+    self.scanState = 0
+    target_index = target_index + 1
+  elseif self.scanState == 1 and tx - px < -tr then
+    self.scanState = 2
+    self.scanTime = love.timer.getTime()
+  elseif self.scanState == 0 and tx - px < tr * 2 then
+    self.scanState = 1
+    self.scanTime = love.timer.getTime()
+  end
+
 
   world:update(dt)
 end

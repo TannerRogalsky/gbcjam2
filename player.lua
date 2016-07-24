@@ -40,8 +40,8 @@ function Player:getLinearVelocity()
 end
 
 function Player:update(dt)
-  local tx, ty = self.body:getPosition()
-  local fx, fy = getForce(tx, ty, self.body:getMass(), GravityWell.instances)
+  local px, py = self.body:getPosition()
+  local fx, fy = getForce(px, py, self.body:getMass(), GravityWell.instances)
   self.body:applyForce(fx, fy)
 
   self.fuel = math.min(self.max_fuel, self.fuel + dt)
@@ -51,20 +51,21 @@ function Player:update(dt)
   self.body:setLinearVelocity(math.clamp(-self.maxVelocity, vx, self.maxVelocity), math.clamp(-self.maxVelocity, vy, self.maxVelocity))
 
   -- get closest gravity_well
-  local nearestWell, dx, dy, dist = getNearestGravityWellToPoint(tx, ty, GravityWell.instances)
+  local nearestWell, dx, dy, dist = getNearestGravityWellToPoint(px, py, GravityWell.instances)
   dist = dist - (nearestWell:getRadius() ^ 2)
 
   -- If we're within an arbitrary dist^2, try and rotate to land using magic numbers
   if (dist < 25000) then
     local phi = math.atan2(dy, dx)
     local angle = (phi + math.pi / 2) - player.body:getAngle()
-    angle = (angle + math.pi) % (math.pi * 2) - math.pi
+    angle = (angle + math.pi) % (math.tau) - math.pi
     player.body:applyTorque(angle * (0.022 * (26000 - dist)) )
   end
 
   -- set engine particle system rotation
   self.enginepsystem:setDirection(self.body:getAngle())
   self.enginepsystem:update(dt)
+
 end
 
 function Player:draw()
