@@ -20,6 +20,8 @@ function MainStart:enteredState()
   local Camera = require("lib/camera")
   self.camera = Camera:new()
 
+  bg_music:rewind()
+
   overlay = g.newCanvas()
   g.setCanvas(overlay)
   g.setColor(0, 0, 0)

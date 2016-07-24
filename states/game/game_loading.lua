@@ -39,6 +39,9 @@ function Loading:enteredState()
     -- loader finished callback
     -- initialize game stuff here
 
+    bg_music = love.audio.newSource('sounds/03_eternity.ogg')
+    bg_music:setLooping(true)
+    bg_music:play()
     self:gotoState("Menu")
   end)
 
