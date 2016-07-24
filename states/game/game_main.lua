@@ -76,17 +76,28 @@ function Main:update(dt)
 
   local tx, ty = level.targets[target_index]:getPosition()
   local tr = level.targets[target_index]:getRadius()
+  local dx, dy = px - tx, py - ty
+  local tDist2 = dx * dx + dy * dy
+  tDist2 = tDist2 - (tr ^ 2)
+
+  if self.scanState == 1 then
+    local dataGatheredThisStep = (self.dataPerSecondScanning / (tDist2 / 4000)) * dt
+    self.planetDataGathered[target_index] = self.planetDataGathered[target_index] + dataGatheredThisStep
+  end
 
   if self.scanState == 2 and love.timer.getTime() - 2.5 > self.scanTime then
     self.scanState = 0
     target_index = target_index + 1
   elseif self.scanState == 1 and tx - px < -tr then
     self.scanState = 2
+    self.planetDataGathered[target_index] = math.min(self.planetDataGathered[target_index], tr * self.dataPerRadius)
+    self.totalDataGathered = self.totalDataGathered + self.planetDataGathered[target_index]
     self.scanTime = love.timer.getTime()
     current_juno_speech_data = juno_speech_data[target_index]
     flavour_tween_in = tween.new(0.5, juno_pos, {y = g.getHeight() - 64 * 2}, 'linear')
   elseif self.scanState == 0 and tx - px < tr * 2 then
     self.scanState = 1
+    self.planetDataGathered[target_index] = 0
     self.scanTime = love.timer.getTime()
   end
 

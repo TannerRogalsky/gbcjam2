@@ -39,7 +39,7 @@ local function drawGame(game)
     elseif game.scanState == 1 then
       g.print('SCANNING : ' .. level.targets[target_index].name .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
     elseif game.scanState == 2 then
-      g.print('TRANSMITTING ' .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
+      g.print('TRANSMITTING ' .. string.format('%.2f', game.planetDataGathered[target_index]) .. 'GB ' .. dots[math.floor((dotTime % #dots) + 1)], 5, g.getHeight() - 16)
     end
   end
 end
